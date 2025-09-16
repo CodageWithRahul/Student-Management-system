@@ -26,12 +26,12 @@ def login():
         password = request.form.get("password")
         user = User.query.filter_by(username=username).first()
         if user and user.password == password:
-            session['user_id'] = user.user_id
+            session['user_id'] = user.id
             session["user"] = user.name
-            print(user.user_id)
+            print(user.id)
             print(user.name)
             flash("Login successful!", "success")
-            return redirect(url_for('tasks.home'))
+            # return redirect(url_for('tasks.home'))
         else:
             flash("invalid credentials", "error")
     return render_template("login.html")
