@@ -2,6 +2,7 @@ from flask import Blueprint,render_template,request,redirect,url_for,flash,sessi
 from app import db
 from app.models.sms_models import User
 
+
 auth_bp = Blueprint('auth',__name__)
 
 @auth_bp.route("/signup",methods = ["POST","GET"])
@@ -31,7 +32,7 @@ def login():
             print(user.id)
             print(user.name)
             flash("Login successful!", "success")
-            # return redirect(url_for('tasks.home'))
+            return redirect(url_for('dashboard.home'))
         else:
             flash("invalid credentials", "error")
     return render_template("login.html")
