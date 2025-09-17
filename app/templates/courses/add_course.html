@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Add Course{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/add_course.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h2>Add New Course</h2>
+    <form method="POST" action="/courses/add">
+        <div class="form-group">
+            <label for="name">Course Name</label>
+            <input type="text" id="name" name="name" placeholder="Enter course name" required>
+        </div>
+
+        <div class="form-group">
+            <label for="duration">Course Duration</label>
+            <input type="text" id="duration" name="duration" placeholder="Enter course duration (e.g., 3 Years)" required>
+        </div>
+
+        <!-- <div class="form-group">
+            <label for="num_semesters">Number of Semesters</label>
+            <input type="number" id="num_semesters" name="num_semesters" min="1" placeholder="e.g., 6" required>
+        </div> -->
+
+        <div class="form-actions">
+            <button type="submit" class="btn-submit">Add Course</button>
+            <a href="/courses" class="btn-cancel">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

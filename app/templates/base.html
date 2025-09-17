@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %} SMS Dashboard {% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    {% block css %}{% endblock %}
+</head>
+
+<body>
+    <div class="main-content">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h2>SMS Admin</h2>
+            <ul>
+                <li><a href="/">Dashboard</a></li>
+                <li><a href="/students">Students</a></li>
+                <li><a href="/courses">Courses</a></li>
+                <li><a href="/enrollments">Enrollments</a></li>
+            </ul>
+        </div>
+
+        <!-- Main content wrapper -->
+        <div class="content">   
+            <header>
+                <h1>{% block header_title %}Dashboard{% endblock %}</h1>
+                <a href="/logout" class="logout-btn">Logout</a>
+            </header>
+
+            <main>
+                {% block content %}
+                {% endblock %}
+            </main>
+        </div>
+    </div>
+</body>
+
+</html>

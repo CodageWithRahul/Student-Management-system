@@ -16,7 +16,11 @@ def create_app():
 
     from app.routes.auth import auth_bp
     from app.routes.dashboard import dashboard_bp
+    from app.routes.students import student_bp
+    from app.routes.courses import course_bp
     app.register_blueprint(auth_bp)
     app.register_blueprint(dashboard_bp)
+    app.register_blueprint(student_bp)
+    app.register_blueprint(course_bp)
 
     return app

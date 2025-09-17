@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SignUp - Student Management System</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/signup.css') }}">
+</head>
+<body>
+  <div class="signup-container">
+    <form method="POST" action="/signup" class="signup-card">
+      <h2>Create Your Account</h2>
+
+      <label for="name">Full Name</label>
+      <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" placeholder="Enter your Email-Id" required>
+
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" placeholder="Enter username" required>
+
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" placeholder="Enter password" required>
+
+      <button type="submit" class="btn-primary">Sign Up</button>
+      <a href="/login" class="btn-secondary">Back to Login</a>
+
+      <!-- Flash messages -->
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <p class="{{ category }}">{{ message }}</p>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+    </form>
+  </div>
+</body>
+</html>

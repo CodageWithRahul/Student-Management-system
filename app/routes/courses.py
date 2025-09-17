@@ -1,0 +1,67 @@
+from flask import Blueprint,render_template,redirect,url_for,flash,session,request
+from app import db
+from app.models.sms_models import Course ,Subject
+
+course_bp = Blueprint("course",__name__)
+
+@course_bp.route("/courses")
+def course_home():
+    return render_template("courses/courses.html")
+
+
+@course_bp.route("/courses/add",methods = ["POST","GET"])
+def add_course():
+    if request.method == "POST":
+        course_name = request.form.get("name")
+        course_duration = request.form.get("duration")
+        new_course = Course(name = course_name,duration = course_duration)
+        db.session.add(new_course)
+        db.session.commit()
+        return redirect(url_for("course.course_home"))
+    else:
+        return render_template("courses/add_course.html")
+
+@course_bp.route("/courses/search",methods = ["POST"])
+def search_course():
+    search_term = request.form.get("search")
+
+    if not search_term:
+        flash("Please enter a search term", "error")
+        return redirect("/courses")
+    if search_term.isdigit():
+        got_course = Course.query.filter_by(id=int(search_term))
+    else:
+        got_course = Course.query.filter(Course.name.ilike(f"%{search_term}%")).all()
+
+    if not got_course:
+        flash("No Course found", "error")
+
+    return render_template("courses/courses.html",courses = got_course)
+        
+
+@course_bp.route("/courses/add/subject",methods = ["POST","GET"])
+def add_subject():
+    if request.method == ("POST"):
+        sub_code = request.form.get("sub_code")
+        sub_name = request.form.get("sub_name")
+        new_sub = Subject(code = sub_code,name = sub_name)
+        db.session.add(new_sub)
+        db.session.commit()
+        flash("Subject is added","success")
+        return redirect(url_for("course.add_subject"))
+    else:
+        return render_template("courses/add_subject.html")
+    
+
+@course_bp.route("/courses/<int:course_id>/semester",methods = ["POST","GET"])  # here we need work 
+def add_subject():
+    if request.method.get("POST"):
+        sub_code = request.form.get("sub_code")
+        sub_name = request.form.get("sub_name")
+        new_sub = Subject(code = sub_code,name = sub_name)
+        db.session.add(new_sub)
+        db.session.commit()
+        flash("Subject is added","success")
+        return redirect(url_for("course.add_subject"))
+    else:
+        return render_template(("courses/add_subject.html"))

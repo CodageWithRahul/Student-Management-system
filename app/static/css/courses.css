@@ -1,0 +1,114 @@
+.courses-container {
+    background: #fff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin: 20px;
+}
+
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.top-bar h2 {
+    color: #2c3e50;
+}
+
+.btn-add {
+    background: #27ae60;
+    color: #fff;
+    padding: 8px 18px;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: background 0.3s;
+}
+
+.btn-add:hover {
+    background: #1e8449;
+}
+
+.search-form {
+    display: flex;
+    margin-bottom: 20px;
+    gap: 10px;
+}
+
+.search-form input {
+    flex: 1;
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+.search-form button {
+    padding: 8px 18px;
+    border-radius: 6px;
+    border: none;
+    background: #3498db;
+    color: #fff;
+    cursor: pointer;
+}
+
+.search-form button:hover {
+    background: #2980b9;
+}
+
+.courses-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.courses-table th, .courses-table td {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+    text-align: left;
+}
+
+.courses-table th {
+    background: #f4f6f9;
+    color: #2c3e50;
+}
+
+.courses-table td .btn-edit,
+.courses-table td .btn-delete,
+.courses-table td .btn-semesters,
+.courses-table td .btn-students,
+.courses-table td .btn-subjects {
+    padding: 5px 10px;
+    border-radius: 6px;
+    text-decoration: none;
+    color: #fff;
+    font-size: 0.85rem;
+    margin-right: 5px;
+    transition: background 0.3s;
+}
+
+.btn-edit { background: #3498db; }
+.btn-edit:hover { background: #2980b9; }
+
+.btn-delete { background: #e74c3c; }
+.btn-delete:hover { background: #c0392b; }
+
+.btn-semesters { background: #f39c12; }
+.btn-semesters:hover { background: #d68910; }
+
+.btn-students { background: #27ae60; }
+.btn-students:hover { background: #1e8449; }
+
+.btn-subjects { background: #8e44ad; }
+.btn-subjects:hover { background: #71368a; }
+
+.no-data {
+    text-align: center;
+    padding: 20px;
+    color: #999;
+}
+.btn-addsubject { 
+    background: #16a085; 
+}
+.btn-addsubject:hover { 
+    background: #117a65; 
+}

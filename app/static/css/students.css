@@ -1,0 +1,120 @@
+.students-container {
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.students-container h2 {
+    color: #2c3e50;
+    margin-bottom: 20px;
+}
+
+/* Filter/Search Form */
+.filter-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.filter-form input[type="text"],
+.filter-form select {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 0.95rem;
+}
+
+.filter-form input[type="text"]:focus,
+.filter-form select:focus {
+    outline: none;
+    border-color: #2980b9;
+}
+
+.btn-submit, .btn-add {
+    padding: 8px 14px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-submit {
+    background: #2980b9;
+    color: #fff;
+    border: none;
+}
+
+.btn-submit:hover {
+    background: #1f6391;
+}
+
+.btn-add {
+    background: #27ae60;
+    color: #fff;
+    border: none;
+    text-align: center;
+}
+
+.btn-add:hover {
+    background: #1e8449;
+}
+
+/* Students Table */
+.students-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.students-table th, .students-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+.students-table th {
+    background: #34495e;
+    color: #fff;
+    font-weight: 600;
+}
+
+.students-table tr:nth-child(even) {
+    background: #f9f9f9;
+}
+
+/* Actions */
+.actions a {
+    margin-right: 5px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: #fff;
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: 0.3s;
+}
+
+.btn-edit {
+    background: #f1c40f;
+}
+
+.btn-edit:hover {
+    background: #d4ac0d;
+}
+
+.btn-delete {
+    background: #e74c3c;
+}
+
+.btn-delete:hover {
+    background: #c0392b;
+}
+
+.no-data {
+    text-align: center;
+    font-style: italic;
+    color: #999;
+}

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Assign Subjects{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/add_course.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h2>Assign Subjects for {{ semester.course.name }} - Semester {{ semester.number }}</h2>
+    <form method="POST" action="/semesters/{{ semester.id }}/assign_subjects">
+        <div class="form-group">
+            <label for="subjects">Select Subjects</label>
+            <select id="subjects" name="subjects" multiple required>
+                {% for subject in all_subjects %}
+                <option value="{{ subject.code }}">{{ subject.name }}</option>
+                {% endfor %}
+            </select>
+            <small>Hold Ctrl (Windows) / Cmd (Mac) to select multiple subjects</small>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-submit">Assign Subjects</button>
+            <a href="/courses" class="btn-cancel">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

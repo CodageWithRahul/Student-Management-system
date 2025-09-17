@@ -18,7 +18,7 @@ def signup():
         flash("you are added successfully" ,"message")
         return redirect(url_for("auth.login"))
     else:
-        return render_template("signup.html")
+        return render_template("auth/signup.html")
 
 @auth_bp.route("/login",methods=["POST","GET"])
 def login():
@@ -28,17 +28,17 @@ def login():
         user = User.query.filter_by(username=username).first()
         if user and user.password == password:
             session['user_id'] = user.id
-            session["user"] = user.name
+            # session["user"] = user.name
             print(user.id)
             print(user.name)
             flash("Login successful!", "success")
             return redirect(url_for('dashboard.home'))
         else:
             flash("invalid credentials", "error")
-    return render_template("login.html")
+    return render_template("auth/login.html")
 
 @auth_bp.route("/logout")
 def logout():
-    session.pop('user')
+    # session.pop('user')
     session.pop('user_id')
     return redirect(url_for("auth.login"))
