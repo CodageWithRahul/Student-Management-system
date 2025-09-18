@@ -1,6 +1,6 @@
 from flask import Blueprint,render_template,redirect,url_for,flash,session,request
 from app import db
-from app.models.sms_models import Course ,Subject
+from app.models.sms_models import Course ,Subject,SemesterSubject
 
 course_bp = Blueprint("course",__name__)
 
@@ -53,15 +53,12 @@ def add_subject():
         return render_template("courses/add_subject.html")
     
 
-@course_bp.route("/courses/<int:course_id>/semester",methods = ["POST","GET"])  # here we need work 
-def add_subject():
-    if request.method.get("POST"):
-        sub_code = request.form.get("sub_code")
-        sub_name = request.form.get("sub_name")
-        new_sub = Subject(code = sub_code,name = sub_name)
-        db.session.add(new_sub)
-        db.session.commit()
-        flash("Subject is added","success")
-        return redirect(url_for("course.add_subject"))
-    else:
-        return render_template(("courses/add_subject.html"))
+@course_bp.route("/courses/<int:course_id>/semesters")  # here we need work 
+def semester_manage(course_id):
+    course = SemesterSubject.query.filter_by(id = course_id)
+    return render_template("courses/semester_manage.html",semesters = course)
+
+
+@course_bp.route("/courses/add/semester<int:course_id>",methods = ["POST","GET"])
+def add_semester():
+    return render_template("courses/add_semester.html",course = "BCA",subjects = Subject.query.all())
