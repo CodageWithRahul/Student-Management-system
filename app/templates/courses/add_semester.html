@@ -8,9 +8,9 @@
 
 {% block content %}
 <div class="form-container">
-  <h2>Add Semester for {{ course.name }}</h2>
+  <h2>Add Semester for {{ course.name  }}</h2>
 
-  <form method="POST" action="/courses/{{ course.id }}/semesters/add">
+  <form method="POST" action="/courses/{{ course.id }}/semesters/add/form">
     <!-- Hidden course ID -->
     <input type="hidden" name="course_id" value="{{ course.id }}">
 

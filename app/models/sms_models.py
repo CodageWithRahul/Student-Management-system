@@ -50,13 +50,17 @@ class Student(db.Model):
 
 class Enrollment(db.Model):
     __tablename__ = "enrollments"
+    f_date = datetime.date.today()
     id = db.Column(db.Integer, primary_key=True)
     student_id = db.Column(db.Integer, db.ForeignKey("students.id"), nullable=False)
     course_id = db.Column(db.Integer, db.ForeignKey("courses.id"), nullable=False)
-    enroll_date = db.Column(db.Date, default=datetime.date.today, nullable=False)
+    semester_id = db.Column(db.Integer, db.ForeignKey("semesters.id"), nullable=False)
+    enroll_date = db.Column(db.Date, default=f_date, nullable=False)
     status = db.Column(db.String(20), default="active", nullable=False)
 
     course = db.relationship("Course", backref="enrollments")
+    semester = db.relationship("Semester", backref="enrollments") 
+
 
 
 class User(db.Model):

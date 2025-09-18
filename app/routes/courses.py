@@ -1,13 +1,16 @@
 from flask import Blueprint,render_template,redirect,url_for,flash,session,request
 from app import db
-from app.models.sms_models import Course ,Subject,SemesterSubject
+from app.models.sms_models import Course ,Subject,SemesterSubject,Semester
 
 course_bp = Blueprint("course",__name__)
 
 @course_bp.route("/courses")
 def course_home():
-    return render_template("courses/courses.html")
-
+    if session.get("user_id"):
+        got_courses = Course.query.all()
+        return render_template("courses/courses.html",courses =got_courses)
+    else:
+        return redirect(url_for("auth.login"))
 
 @course_bp.route("/courses/add",methods = ["POST","GET"])
 def add_course():
@@ -53,12 +56,32 @@ def add_subject():
         return render_template("courses/add_subject.html")
     
 
-@course_bp.route("/courses/<int:course_id>/semesters")  # here we need work 
+@course_bp.route("/courses/<int:course_id>/semesters") 
 def semester_manage(course_id):
-    course = SemesterSubject.query.filter_by(id = course_id)
-    return render_template("courses/semester_manage.html",semesters = course)
+    got_course = Course.query.get_or_404(course_id)
+    return render_template("courses/semester_manage.html",course = got_course)
 
 
-@course_bp.route("/courses/add/semester<int:course_id>",methods = ["POST","GET"])
-def add_semester():
-    return render_template("courses/add_semester.html",course = "BCA",subjects = Subject.query.all())
+@course_bp.route("/courses/<int:course_id>/semesters/add/form",methods = ["POST","GET"])
+def add_semester(course_id):
+    if request.method ==  "POST":
+        c_id = request.form.get("course_id")
+        sem_num = request.form.get("number")
+        selected_subjects = request.form.getlist("subjects")
+        print(c_id)
+        print(sem_num)
+        print(selected_subjects)
+        new_sem = Semester(number= sem_num,course_id = c_id)
+        db.session.add(new_sem)
+        db.session.flush()
+        for sub in selected_subjects:
+            new_sub = SemesterSubject(semester_id = new_sem.id,subject_id = sub)
+            db.session.add(new_sub)
+        
+        db.session.commit()
+        
+        got_course = Course.query.filter_by(id = course_id).first()
+        return render_template("courses/add_semester.html",course = got_course,subjects = Subject.query.all())
+    else:
+        got_course = Course.query.filter_by(id = course_id).first()
+        return render_template("courses/add_semester.html",course = got_course,subjects = Subject.query.all())

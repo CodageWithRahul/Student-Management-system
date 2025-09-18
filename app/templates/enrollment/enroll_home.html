@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Enrollments{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/enroll_home.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="enrollments-container">
+    <div class="top-bar">
+        <h2>Enrollment Management</h2>
+        <a href="/enrollments/add" class="btn-add">+ Add Enrollment</a>
+    </div>
+
+    <!-- Search -->
+    <form method="POST" action="/enrollments/search" class="search-form">
+        <input type="text" name="search" placeholder="Search by student or course..." required>
+        <button type="submit">Search</button>
+    </form>
+
+    <!-- Enrollment Table -->
+    <table class="enrollments-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Student</th>
+                <th>Course</th>
+                <th>Enrollment Date</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for enroll in enrollments %}
+            <tr>
+                <td>{{ enroll.id }}</td>
+                <td>{{ enroll.student.name }}</td>
+                <td>{{ enroll.course.name }}</td>
+                <td>{{ enroll.enroll_date }}</td>
+                <td>{{ enroll.status }}</td>
+                <td>
+                    <a href="/enrollments/edit/{{ enroll.id }}" class="btn-edit">Edit</a>
+                    <a href="/enrollments/delete/{{ enroll.id }}" class="btn-delete">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% if not enrollments %}
+        <p class="no-data">No enrollments found.</p>
+    {% endif %}
+</div>
+{% endblock %}

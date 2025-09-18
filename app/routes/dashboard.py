@@ -6,8 +6,14 @@ dashboard_bp = Blueprint('dashboard',__name__)
 
 @dashboard_bp.route("/")
 def home():
-    totalStudents =  Student.query.count()
-    totalCourses =  Course.query.count()
-    totalSubjects =  Subject.query.count()
-    totalEnrollments =  Enrollment.query.count()
-    return render_template("dashboard.html",total_students = totalStudents,total_courses = totalCourses,total_subjects = totalSubjects,total_enrollments = totalEnrollments)
+    if session.get("user_id"):
+        totalStudents =  Student.query.count()
+        totalCourses =  Course.query.count()
+        totalSubjects =  Subject.query.count()
+        totalEnrollments =  Enrollment.query.count()
+        return render_template("dashboard.html",total_students = totalStudents,total_courses = totalCourses,total_subjects = totalSubjects,total_enrollments = totalEnrollments)
+    else:
+        return redirect(url_for("auth.login"))
+    
+
+
