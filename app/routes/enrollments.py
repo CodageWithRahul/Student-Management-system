@@ -28,6 +28,37 @@ def add_enroll():
         got_courses = Course.query.all()
         return render_template("enrollment/add_enrollment.html",courses = got_courses)
 
+@enrollment_bp.route("/enrollments/<int:enroll_id>/edit",methods = ["POST","GET"])
+def edit_enroll(enroll_id):
+    got_enroll = Enrollment.query.get_or_404(enroll_id)    
+    if request.method == "POST":
+        got_enroll.student_id = request.form.get("student_id")
+        got_enroll.course_id = request.form.get("course_id")
+        got_enroll.semester_id = request.form.get("semester_id")
+        # got_enroll.enroll_date = request.form.get()
+        got_enroll.status = request.form.get("status")
+        
+        try:
+            db.session.commit()
+            flash("student is updated succesfully","success")
+            return redirect(url_for("enrollment.enroll_home"))
+        except Exception as e:
+            db.session.rollback()
+            flash("error in updated ","error")
+            return redirect(url_for("enrollment.enroll_home")) 
+    else :
+        got_courses = Course.query.all()
+        return render_template("enrollment/edit_enroll.html",enroll = got_enroll,courses =got_courses)
+    
+@enrollment_bp.route("/enrollments/<int:enroll_id>/delete",methods = ["POST","GET"])
+def deroll_student(enroll_id):
+    enrolled_studnet = Enrollment.query.get_or_404(enroll_id)
+    
+    db.session.delete(enrolled_studnet)
+    db.session.commit()
+    flash("Student has been de-enrolled successfully.", "success")
+    return redirect(url_for("enrollment.enroll_home"))
+    
 
 @enrollment_bp.route("/students/search")
 def search_students():

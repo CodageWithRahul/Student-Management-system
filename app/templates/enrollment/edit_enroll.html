@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}Enrollment{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/add_enrollment.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h2>Update Enrollment</h2>
+    <form method="POST" action="/enrollments/{{ enroll.id }}/edit">
+
+        <label for="student">Select Student</label>
+        <input type="text" id="student-search" value="{{enroll.student.name}}" placeholder="Type student name..."
+            autocomplete="off">
+        <input type="hidden" value="{{enroll.student.id}}" name="student_id" id="student-id">
+        <div id="search-results"></div>
+
+        <label for="course">Select Course</label>
+        <select name="course_id" id="courseSelect" required>
+            {% for course in courses %}
+            <option value="{{ course.id }}" {% if course.id==enroll.course_id %}selected{% endif %}>{{ course.name }}
+            </option>
+            {% endfor %}
+        </select>
+
+        <label for="course">Select Semester</label>
+        <select name="semester_id" id="semesterSelect" required>
+            <option value="">All Semesters</option>
+        </select>
+
+        <label for="enroll_date">Enrollment Date</label>
+        <input type="date" name="enroll_date" value="{{ enroll.enroll_date }}" required>
+
+        <label for="status">Status</label>
+        <select name="status">
+            <option value="active" {% if enroll.status=="active" %}selected{% endif %}>Active</option>
+            <option value="completed" {% if enroll.status=="completed" %}selected{% endif %}>Completed</option>
+            <option value="dropped" {% if enroll.status=="dropped" %}selected{% endif %}>Dropped</option>
+        </select>
+
+
+        <button type="submit" class="btn">Update Enrollment</button>
+    </form>
+</div>
+
+<script>
+    document.getElementById("student-search").addEventListener("input", async function () {
+
+        let query = this.value;
+        if (query.length < 2) return;
+
+        let res = await fetch(`/students/search?query=${query}`);
+        let students = await res.json();
+
+        let resultsDiv = document.getElementById("search-results");
+        resultsDiv.innerHTML = "";
+        students.forEach(st => {
+            let div = document.createElement("div");
+            div.innerText = st.name + " (" + st.id + ")";
+            div.onclick = function () {
+                document.getElementById("student-search").value = st.name;
+                document.getElementById("student-id").value = st.id;
+                resultsDiv.innerHTML = "";
+            }
+            resultsDiv.appendChild(div);
+        });
+    });
+   let currentSemesterId = "{{ enroll.semester.id }}";  // from backend
+
+document.getElementById("courseSelect").addEventListener("change", function () {
+    let courseId = this.value;
+    let semesterSelect = document.getElementById("semesterSelect");
+
+    semesterSelect.innerHTML = '<option value="">-- Select Semester --</option>';
+
+    if (courseId) {
+        fetch(`/api/courses/${courseId}/semesters`)
+            .then(response => response.json())
+            .then(data => {
+                data.semesters.forEach(sem => {
+                    let opt = document.createElement("option");
+                    opt.value = sem.id;
+                    opt.textContent = "Semester " + sem.number;
+                    if (sem.id == currentSemesterId) {
+                        opt.selected = true; // ✅ auto-select saved semester
+                    }
+                    semesterSelect.appendChild(opt);
+                });
+            });
+    }
+});
+
+// 👇 Trigger change on page load to auto-fill semesters
+document.getElementById("courseSelect").dispatchEvent(new Event("change"));
+
+
+</script>
+{% endblock %}
