@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Semester{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/add_semester.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+  <h2>Edit Semester for {{ course.name  }}</h2>
+
+  <form method="POST" action="/courses/edit/semester/{{semester.id}}">
+    <!-- Hidden course ID -->
+    <input type="hidden" name="course_id" value="{{ course.id }}">
+
+    <!-- Semester Number -->
+    <label for="number">Semester Number</label>
+    <input type="number" id="number" value="{{semester.number}}" name="number" placeholder="e.g. 1" required>
+
+    <!-- Subjects Dropdown -->
+    <label for="subjects">Select Subjects</label>
+    <select id="subjects" name="subjects" multiple required>
+      {% for subject in subjects %}
+        <!-- <option value="">{{subject.code}}</option> -->
+        <option value="{{ subject.code }}" {% if subject in semester.subjects %}selected{% endif %}>{{ subject.name }}</option>
+      {% endfor %}
+    </select>
+
+    <small class="note">Hold CTRL (Windows) or CMD (Mac) to select multiple subjects.</small>
+
+    <!-- Submit -->
+    <button type="submit" class="btn">Add Semester</button>
+  </form>
+</div>
+{% endblock %}

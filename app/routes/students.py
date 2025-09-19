@@ -11,6 +11,7 @@ def students():
         return render_template("students/students.html",courses=got_course)
     else:
         return redirect(url_for("auth.login"))
+    
 
 @student_bp.route("/api/courses/<int:course_id>/semesters")
 def api_get_semesters(course_id):
@@ -28,11 +29,16 @@ def add_student():
         phone = request.form.get("phone")
         email = request.form.get("email")
         last_qualification = request.form.get("last_qualification")
-        new_student = Student(name=name,address=address,age=age,phone=phone,email=email,last_qualification=last_qualification)
-        db.session.add(new_student)
-        db.session.commit()
-        flash(f"Student {name} added successfully" ,"message")
-        return redirect(url_for("student.students"))
+        try:
+            new_student = Student(name=name,address=address,age=age,phone=phone,email=email,last_qualification=last_qualification)
+            db.session.add(new_student)
+            db.session.commit()
+            flash(f"Student {name} added successfully" ,"message")
+            return redirect(url_for("student.students"))
+        except Exception as e:
+            flash(f"error same email found" ,"message")
+            return redirect(url_for("student.add_student"))
+            
     else:
         return render_template("students/add_student.html")
     
@@ -47,7 +53,7 @@ def serachStudent():
         return redirect("/students")
 
     # Start query joining Student and Enrollment
-    query = Student.query.join(Enrollment)
+    query = Student.query.outerjoin(Enrollment)
 
     # Apply search by term (id or name)
     if search_term:
@@ -55,21 +61,22 @@ def serachStudent():
             query = query.filter(Student.id == int(search_term))
         else:
             query = query.filter(Student.name.ilike(f"%{search_term}%"))
+    print(query)
 
     # Apply course filter
     if search_course:
         query = query.filter(Enrollment.course_id == int(search_course))
 
     # Apply semester filter
-    if search_sem:
+    if search_sem :
         query = query.filter(Enrollment.semester_id == int(search_sem))
 
     got_students = query.all()
 
     if not got_students:
         flash("No students found", "error")
-
-    return render_template("students/students.html", students=got_students)
+    got_course =  Course.query.all()
+    return render_template("students/students.html", courses = got_course,students=got_students)
 
 
 
@@ -93,7 +100,7 @@ def edit_student(student_id):
             return redirect(url_for("student.students"))  # go back to student list
         except Exception as e:
             db.session.rollback()
-            flash(f"Error updating student: {e}", "error")
+            flash(f"Error updating student", "error")
 
     # GET request → render form with current data
     return render_template("students/edit_student.html", student=got_student)

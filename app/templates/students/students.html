@@ -34,7 +34,7 @@
                 <th>ID</th>
                 <th>Name</th>
                 <th>Email</th>
-                <th>Coursess</th>
+                <th>Courses</th>
                 <th>Semester</th>
                 <th>Phone</th>
                 <th>Actions</th>
@@ -77,6 +77,14 @@
             {% endif %}
         </tbody>
     </table>
+     {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <p class="{{ category }}">{{ message }}</p>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+    
 </div>
 <script>
     document.getElementById("courseSelect").addEventListener("change", function () {
@@ -103,6 +111,7 @@
     function confirmDelete(form) {
     return confirm("Are you sure you want to delete this student?");
 }
+
 </script>
 
 {% endblock %}

@@ -55,5 +55,13 @@
     {% if not courses %}
     <p class="no-data">No courses found.</p>
     {% endif %}
+
+    {%with messages =  get_flashed_messages(with_categories=true)%}
+        {%if messages %}
+            {%for category, message in messages%}
+                <p class="{{category}}">{{ message }}</p>
+            {%endfor%}
+        {%endif%}
+    {%endwith%}
 </div>
 {% endblock %}

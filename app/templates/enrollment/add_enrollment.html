@@ -18,6 +18,7 @@
 
         <label for="course">Select Course</label>
         <select name="course_id"  id="courseSelect"required>
+            <option value="" selected>Choose Course</option>
             {% for course in courses %}
             <option value="{{ course.id }}">{{ course.name }}</option>
             {% endfor %}

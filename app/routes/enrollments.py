@@ -58,6 +58,15 @@ def deroll_student(enroll_id):
     db.session.commit()
     flash("Student has been de-enrolled successfully.", "success")
     return redirect(url_for("enrollment.enroll_home"))
+
+@enrollment_bp.route("/enrollments/search",methods = ["POST"])
+def search_enroll():
+    search_term= request.form.get("search")
+    if search_term.isdigit():
+        got_enroll = Enrollment.query.filter(Enrollment.id == int(search_term))
+    else:
+        got_enroll = Enrollment.query.join(Course).join(Student).filter(Course.name.ilike(f"%{search_term}%") | (Student.name.ilike(f"%{search_term}%")) | (Enrollment.enroll_date.ilike(f"%{search_term}%")))
+    return render_template("enrollment/enroll_home.html",enrollments= got_enroll)
     
 
 @enrollment_bp.route("/students/search")

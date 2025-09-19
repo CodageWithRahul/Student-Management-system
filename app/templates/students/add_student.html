@@ -9,6 +9,13 @@
 {% block content %}
 <div class="form-container">
     <h2>Add New Student</h2>
+     {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <p class="{{ category }}">{{ message }}</p>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
 
     <form method="POST" action="/students/add">
         <div class="form-group">
@@ -45,14 +52,6 @@
             <button type="submit" class="btn-submit">Add Student</button>
             <a href="/students" class="btn-cancel">Cancel</a>
         </div>
-
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <p class="{{ category }}">{{ message }}</p>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
     </form>
 </div>
 {% endblock %}

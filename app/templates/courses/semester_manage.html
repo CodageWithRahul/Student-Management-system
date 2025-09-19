@@ -21,6 +21,14 @@
 
     <!-- Courses Table -->
     <h2>Semesters for {{ course.name }}</h2>
+    {%with messages =  get_flashed_messages(with_categories=true)%}
+        {%if messages %}
+            {%for category, message in messages%}
+                <p class="{{category}}">{{ message }}</p>
+            {%endfor%}
+        {%endif%}
+    {%endwith%}
+
     <table class="courses-table">
         <thead>
             <tr>
@@ -31,7 +39,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for semester in course.semesters %}
+            {% for semester in course.semesters | sort(attribute="number")%}
             <tr>
                 <td>{{ semester.id }}</td>
                 <td>{{ semester.number }}</td>

@@ -16,15 +16,15 @@
             {%endfor%}
         {%endif%}
     {%endwith%}
-    <form method="POST" action="/courses/add">
+    <form method="POST" action="/courses/edit/{{course.id}}">
         <div class="form-group">
             <label for="name">Course Name</label>
-            <input type="text" id="name" name="name" placeholder="Enter course name" required>
+            <input type="text" id="name" value="{{course.name}}" name="name" placeholder="Enter course name" required>
         </div>
 
         <div class="form-group">
             <label for="duration">Course Duration</label>
-            <input type="text" id="duration" name="duration" placeholder="Enter course duration (e.g., 3 Years)" required>
+            <input type="text" id="duration" value="{{course.duration}}" name="duration" placeholder="Enter course duration (e.g., 3 Years)" required>
         </div>
 
         <!-- <div class="form-group">
