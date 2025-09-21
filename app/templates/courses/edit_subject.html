@@ -9,16 +9,24 @@
 
 {% block content %}
 <div class="form-container">
-    <h2>Add New Subject</h2>
-    <form method="POST" action="/courses/add/subject">
+    {%with messages = get_flashed_messages(with_categories = true)%}
+        {%if messages%}
+            {%for category, message in messages%}
+                <p class="category">{{message}}</p>
+            {%endfor%}
+        {%endif%}
+    {%endwith%}
+
+    <h2>Edit Subject</h2>
+    <form method="POST" action="/courses/edit/{{subject.code}}">
         <div class="form-group">
             <label for="name">Subject Name </label>
-            <input type="text" id="name" name="sub_name" placeholder="Enter Subject name" required>
+            <input type="text" id="name" value="{{subject.name}}" name="sub_name" placeholder="Enter Subject name" required>
         </div>
 
         <div class="form-group">
             <label for="sub_code">Subject Code</label>
-            <input type="text" id="sub_code" name="sub_code" placeholder="Enter Subject Code (e.g., 101Math)" required>
+            <input type="text" id="sub_code" value="{{subject.code}}" name="sub_code" placeholder="Enter Subject Code (e.g., 101Math)" required>
         </div>
 
         <div class="form-actions">

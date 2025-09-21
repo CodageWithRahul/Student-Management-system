@@ -71,7 +71,21 @@ header {
     align-items: center;
     border-bottom: 2px solid #eee;
 }
-
+/* User info container */
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* spacing between username and logout button */
+}
+/* Username styling */
+.username {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #2c3e50;
+    
+    padding: 6px 12px;
+    border-radius: 6px;
+}
 header h1 {
     font-size: 1.4rem;
     color: #2c3e50;

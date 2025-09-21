@@ -81,6 +81,10 @@
     color: #fff;
     font-weight: 600;
 }
+.student_name_a {
+text-decoration:  none;
+color: black;
+}
 
 .students-table tr:nth-child(even) {
     background: #f9f9f9;

@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Add Course{% endblock %}
+{% block title %}Course{% endblock %}
 
 {% block css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/add_course.css') }}">
@@ -8,7 +8,7 @@
 
 {% block content %}
 <div class="form-container">
-    <h2>Add New Course</h2>
+    <h2>Edit Course</h2>
     {%with messages =  get_flashed_messages(with_categories=true)%}
         {%if messages %}
             {% for category, message in messages %}

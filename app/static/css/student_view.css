@@ -1,0 +1,167 @@
+body {
+    background: #f4f6f8;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.student-card {
+    max-width: 400px; /* smaller width */
+    margin: 10px auto; /* less top/bottom space */
+    background: #ffffff;
+    border-radius: 12px;
+    /* border: 1px solid black; */
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.student-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+}
+
+/* Header */
+.card-header {
+    background: linear-gradient(135deg, #2980b9, #3498db);
+    text-align: center;
+    color: #fff;
+    padding: 25px 15px 20px; /* reduced padding */
+    position: relative;
+}
+
+/* Base row style */
+.info-row.address .value {
+  display: inline-block;
+  max-width: 220px;          /* restrict width */
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+  cursor: pointer;
+  transition: all 0.8s ease;
+}
+
+/* Expanded state on hover */
+.info-row.address:hover .value {
+  white-space: normal;       /* wrap text */
+  max-width: 65%;           /* take full width */
+  background: #f9f9f9;       /* subtle background */
+  padding: 6px 8px;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  position: relative;
+  z-index: 1;
+  transition: all 0.8s ease;
+}
+
+
+.card-header .avatar {
+    width: 70px; /* smaller avatar */
+    height: 70px;
+    background: #fff;
+    color: #3498db;
+    font-size: 2rem; /* smaller font */
+    font-weight: bold;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 10px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+}
+
+.card-header h2 {
+    font-size: 1.4rem; /* smaller font */
+    margin-bottom: 3px;
+}
+
+.card-header .role {
+    font-size: 0.85rem;
+    opacity: 0.85;
+}
+
+/* Body */
+.card-body {
+    padding: 20px 15px; /* reduced padding */
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0; /* reduced vertical spacing */
+    border-bottom: 1px solid #eee;
+    font-size: 0.9rem; /* smaller font */
+}
+
+.info-row:last-child {
+    border-bottom: none;
+}
+
+.info-row .label {
+    font-weight: 600;
+    color: #555;
+}
+
+.info-row .value {
+    color: #2c3e50;
+    font-weight: 500;
+}
+
+/* Footer */
+.card-footer {
+    padding: 15px 0; /* reduced padding */
+    text-align: center;
+}
+
+.btn-back {
+    display: inline-block;
+    text-decoration: none;
+    background: #3498db;
+    color: #fff;
+    padding: 8px 20px; /* smaller button */
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.85rem; /* smaller text */
+    transition: background 0.3s, transform 0.2s;
+}
+
+.btn-back:hover {
+    background: #2980b9;
+    transform: translateY(-1px);
+}
+
+/* Flash messages */
+.flash {
+    margin: 15px auto 0;
+    text-align: center;
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-weight: 500;
+    max-width: 400px;
+    font-size: 0.85rem;
+}
+
+.flash.error {
+    background: #e74c3c;
+    color: #fff;
+}
+
+.flash.success {
+    background: #2ecc71;
+    color: #fff;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .student-card {
+        margin: 30px 10px;
+    }
+
+    .info-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .info-row .value {
+        margin-top: 3px;
+    }
+}

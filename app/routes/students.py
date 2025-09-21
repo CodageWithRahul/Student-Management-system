@@ -125,5 +125,10 @@ def delete_student(student_id):
 
     return redirect(url_for("student.students"))
 
+@student_bp.route("/students/<int:student_id>/viwe")
+def viwe_student(student_id):
+    got_student = Student.query.get_or_404(student_id)
+    return render_template("students/student_viwe.html", student=got_student,back_url = "students",show_edit = True)
+
 
     

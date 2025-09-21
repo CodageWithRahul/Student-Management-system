@@ -13,10 +13,14 @@ def signup():
         username = request.form.get("username")
         password = request.form.get("password")
         new_user = User(name = name,email = email ,username = username,password = password)
-        db.session.add(new_user)
-        db.session.commit()
-        flash("you are added successfully" ,"message")
-        return redirect(url_for("auth.login"))
+        try:
+            db.session.add(new_user)
+            db.session.commit()
+            flash("you are added successfully" ,"message")
+            return redirect(url_for("auth.login"))
+        except Exception :
+            flash("User already exists")
+            return render_template("auth/signup.html")
     else:
         return render_template("auth/signup.html")
 
@@ -28,10 +32,6 @@ def login():
         user = User.query.filter_by(username=username).first()
         if user and user.password == password:
             session['user_id'] = user.id
-            # session["user"] = user.name
-            print(user.id)
-            print(user.name)
-            flash("Login successful!", "success")
             return redirect(url_for('dashboard.home'))
         else:
             flash("invalid credentials", "error")
@@ -39,6 +39,6 @@ def login():
 
 @auth_bp.route("/logout")
 def logout():
-    # session.pop('user')
     session.clear()
+    flash("You have been logged out", "info")
     return redirect(url_for("auth.login"))

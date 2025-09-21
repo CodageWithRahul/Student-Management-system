@@ -36,6 +36,15 @@ body {
   color: #2c3e50;
 }
 
+#reloadImg {
+  width: 2.5rem;
+    height: auto;
+    cursor: pointer;
+    border-radius: 4px;
+    padding: 2px;
+
+}
+
 /* Inputs */
 label {
   display: block;

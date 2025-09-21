@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Student Profile{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/student_view.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="student-card">
+    <div class="card-header">
+        <div class="avatar">{{ student.name[0]|upper }}</div>
+        <h2>{{ student.name }}</h2>
+        <p class="role">Student</p>
+    </div>
+
+    <div class="card-body">
+        <div class="info-row address">
+            <span class="label">Address:</span>
+            <span class="value">{{ student.address }}</span>
+        </div>
+
+        <div class="info-row"><span class="label">Age:</span> <span class="value">{{ student.age }}</span></div>
+        <div class="info-row"><span class="label">Phone:</span> <span class="value">{{ student.phone }}</span></div>
+        <div class="info-row"><span class="label">Email:</span> <span class="value">{{ student.email }}</span></div>
+        <div class="info-row"><span class="label">Qualification:</span> <span class="value">{{
+                student.last_qualification or 'N/A' }}</span></div>
+    </div>
+    
+        <div class="card-footer">
+            <a href="/{{back_url}}" class="btn-back">← Go Back</a>
+            {%if show_edit%}
+            <a href="/students/{{student.id}}/edit" class="btn-back"> Edit Student</a>
+            {%endif%}
+        </div>
+
+</div>
+
+{% endblock %}

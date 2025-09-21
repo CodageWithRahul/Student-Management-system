@@ -45,7 +45,7 @@
             {% for student in students %}
             <tr>
                 <td>{{ student.id }}</td>
-                <td>{{ student.name }}</td>
+                <td><a href="/students/{{student.id}}/viwe" class = "student_name_a">{{ student.name }}</a></td>
                 <td>{{ student.email }}</td>
                 <td> {% for enrollment in student.enrollments %}
                     {{ enrollment.course.name }},

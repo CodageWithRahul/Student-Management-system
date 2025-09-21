@@ -1,34 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login - Student Management System</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
 </head>
+
 <body>
   <div class="login-container">
-    <form method="POST" action="/login" class="login-card">
+    <form method="POST" id = "captchaForm" class="login-card">
       <h2>Student Management Portal</h2>
-      
+
       <label for="username">Username</label>
       <input type="text" id="username" name="username" placeholder="Enter username" required>
 
       <label for="password">Password</label>
       <input type="password" id="password" name="password" placeholder="Enter password" required>
 
+      <div class="imgDiv"><img id="captcha" src="" alt="CAPTCHA" />
+        <img id="reloadImg" alt="reload" src="{{ url_for('static' , filename = 'img/reloadicon.jpg')}}" onClick="generateCapthca()" />
+      </div>
+      <input type="text" name="captcha_input" id="capInput" required placeholder="Enter CAPTCHA">
+      <input type="hidden" name="captcha_id" id="captcha_id">
+
+      <div id="result" class="resultMsg"></div>
+
       <button type="submit" class="btn-primary">Login</button>
       <a href="/signup" class="btn-secondary">Signup</a>
 
+      
+
+
       <!-- Flash messages -->
       {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-          {% for category, message in messages %}
-            <p class="{{ category }}">{{ message }}</p>
-          {% endfor %}
-        {% endif %}
+      {% if messages %}
+      {% for category, message in messages %}
+      <p class="{{ category }}">{{ message }}</p>
+      {% endfor %}
+      {% endif %}
       {% endwith %}
     </form>
   </div>
+<script> 
+generateCapthca();
+function generateCapthca() {
+	fetch('http://localhost:9090/CaptchaService/generate')
+		.then(response => {
+			const captchaId = response.headers.get('Captcha-ID');
+			console.log("generate id : ", captchaId);
+			document.getElementById('captcha_id').value = captchaId;
+			return response.blob();
+		})
+		.then(blob => {
+			const imageUrl = URL.createObjectURL(blob);
+			document.getElementById('captcha').src = imageUrl;
+		})
+		.catch(error => console.error("Error loading CAPTCHA:", error));
+
+}
+const form = document.getElementById('captchaForm');
+const capInputField = document.getElementById('capInput');
+form.addEventListener('submit', function (e) {
+	e.preventDefault();
+	const formData = new FormData(form);
+	const plainData = {};
+	formData.forEach((value, key) => {
+		plainData[key] = value;
+	});
+
+	fetch('http://localhost:9090/CaptchaService/validate', {
+		method: 'POST',
+		headers: {
+			"Content-Type": "application/json"
+		},
+		body: JSON.stringify(plainData)
+	})
+		.then(res => res.json())
+		.then(data => {
+			if (data.success) {
+			 fetch('/login', {
+                method: 'POST',
+                body: formData   // send original login fields (username, password, etc.)
+            })
+      .then(res => {
+        if(res.redirected){
+          window.location.href =  res.url;
+        }
+        else {
+          return res.text().then(html => {
+            document.body.innerHTML = html;
+          })
+        }
+      });
+			} else {
+				const msg = document.getElementById('result');
+				const inputFiled = document.getElementById('capInput');
+				msg.textContent = data.message;
+				msg.classList.add('error');
+				inputFiled.classList.add('borderError');
+				capInputField.value = "";
+				generateCapthca();
+			}
+		})
+		.catch(err => {
+			console.error("Error:", err);
+		});
+});
+
+</script>
 </body>
+
 </html>

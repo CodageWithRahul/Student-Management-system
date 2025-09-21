@@ -23,18 +23,40 @@
         </div>
 
         <!-- Main content wrapper -->
-        <div class="content">   
+        <div class="content">
             <header>
                 <h1>{% block header_title %}Dashboard{% endblock %}</h1>
-                <a href="/logout" class="logout-btn">Logout</a>
+                <div class="user-info">
+                    <span class="username">Welcome, {{ login_user.name }}</span>
+                    <a href="/logout" class="logout-btn" onclick="clearAppCache()">Logout</a>
+                </div>
             </header>
-
             <main>
-                {% block content %}
-                {% endblock %}
-            </main>
+            {% block content %}
+            {% endblock %}
+        </main>
         </div>
+
+        
     </div>
+    </div>
+
+<script>
+function clearAppCache() {
+    // Clear local/session storage
+    localStorage.clear();
+    sessionStorage.clear();
+
+    // Try to clear browser cache for your app
+    if ('caches' in window) {
+        caches.keys().then(function(names) {
+            for (let name of names) {
+                caches.delete(name);
+            }
+        });
+    }
+}
+</script>
 </body>
 
 </html>

@@ -7,8 +7,7 @@ course_bp = Blueprint("course",__name__)
 @course_bp.route("/courses")
 def course_home():
     if session.get("user_id"):
-        got_courses = Course.query.all()
-        return render_template("courses/courses.html",courses =got_courses)
+        return render_template("courses/courses.html")
     else:
         return redirect(url_for("auth.login"))
 
@@ -46,6 +45,34 @@ def search_course():
         flash("No Course found", "error")
 
     return render_template("courses/courses.html",courses = got_course)
+
+@course_bp.route("/courses/subject")
+def subject_manage():
+    return render_template("courses/subjects_manage.html")
+
+@course_bp.route("/courses/search/subject",methods = ["POST"])
+def search_subject():
+    search_term = request.form.get("search")
+    got_subject = Subject.query.filter(Subject.code.ilike(f"%{search_term}%" ) | Subject.name.ilike(f"%{search_term}%")).all()
+    return render_template("courses/subjects_manage.html",subjects = got_subject)
+
+@course_bp.route("/subject/edit/<string:subject_code>",methods = ["POST","GET"])
+def edit_subject(subject_code):
+    got_sub = Subject.query.get(subject_code)
+    if request.method ==  "POST":
+        got_sub.name = request.form.get("sub_name")
+        got_sub.code = request.form.get("sub_code")
+        try:
+            db.session.commit()
+            flash("Subject updated Successfully","success")
+            return redirect(url_for("course.subject_manage"))
+        except Exception:
+            db.session.rollback()
+            flash("Subject code is already exists","error")
+            return redirect(url_for("course.edit_subject",subject_code = got_sub.code))
+    else:
+        return render_template("courses/edit_subject.html",subject = got_sub)
+    
         
 
 @course_bp.route("/courses/add/subject",methods = ["POST","GET"])
@@ -97,13 +124,27 @@ def edit_course(course_id):
             fetched_course.name = request.form.get("name")
             fetched_course.duration = request.form.get("duration")
             db.session.commit()
-            flash("Update Successfully updated","error")
+            flash("Update Successfully","error")
             return redirect(url_for("course.course_home"))
         except Exception:
             flash("error in updating course","error")
             return redirect(url_for("course.course_home"))
     else:
         return render_template("courses/edit_course.html",course = fetched_course)
+    
+@course_bp.route("/subject/delete/<string:subject_code>",methods = ["POST","GET"])
+def delete_sub(subject_code):
+    sub_for_delete = Subject.query.get(subject_code)
+    try:
+        db.session.delete(sub_for_delete)
+        flash(f"{sub_for_delete.name} is deleted Successfully","success")
+        db.session.commit()
+        return redirect(url_for("course.course_home"))
+    except Exception:
+        flash("This subject is linked with Semester","error")
+        return redirect(url_for("course.course_home"))
+        
+    
     
 @course_bp.route("/courses/delete/<int:course_id>", methods=["POST","GET"])
 def delete_course(course_id):

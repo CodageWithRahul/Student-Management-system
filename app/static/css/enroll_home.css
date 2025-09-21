@@ -55,6 +55,10 @@
     border: 1px solid #ddd;
     text-align: center;
 }
+.student_name_a {
+text-decoration:  none;
+color: black;
+}
 
 .btn-edit {
     background: #ffc107;

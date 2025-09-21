@@ -22,6 +22,15 @@ body {
   padding: 20px;
 }
 
+#reloadImg {
+  width: 2.5rem;
+    height: auto;
+    cursor: pointer;
+    border-radius: 4px;
+    padding: 2px;
+
+}
+
 /* Card */
 .signup-card {
   background: #ffffff;

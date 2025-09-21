@@ -7,11 +7,21 @@
 {% endblock %}
 
 {% block content %}
+<h2>Course view need to build</h2>
 <div class="courses-container">
+    {%with messages =  get_flashed_messages(with_categories=true)%}
+        {%if messages %}
+            {%for category, message in messages%}
+                <p class="{{category}}">{{ message }}</p>
+            {%endfor%}
+        {%endif%}
+    {%endwith%}
     <div class="top-bar">
         <h2>Course Management</h2>
+        <div>
         <a href="/courses/add" class="btn-add">+ Add Course</a>
-        <a href="/courses/add/subject" class="btn-add">+ Add Subject</a>
+        <a href="/courses/subject" class="btn-add">Subjects</a>
+        </div>
     </div>
 
     <!-- Search -->
@@ -56,12 +66,6 @@
     <p class="no-data">No courses found.</p>
     {% endif %}
 
-    {%with messages =  get_flashed_messages(with_categories=true)%}
-        {%if messages %}
-            {%for category, message in messages%}
-                <p class="{{category}}">{{ message }}</p>
-            {%endfor%}
-        {%endif%}
-    {%endwith%}
+    
 </div>
 {% endblock %}

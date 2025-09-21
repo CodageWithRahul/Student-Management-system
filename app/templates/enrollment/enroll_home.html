@@ -8,6 +8,13 @@
 
 {% block content %}
 <div class="enrollments-container">
+    {%with messages = get_flashed_messages(with_categories=true)%}
+    {%if messages %}
+    {%for category, message in messages%}
+    <p class="{{category}}">{{ message }}</p>
+    {%endfor%}
+    {%endif%}
+    {%endwith%}
     <div class="top-bar">
         <h2>Enrollment Management</h2>
         <a href="/enrollments/add" class="btn-add">+ Add Enrollment</a>
@@ -18,6 +25,8 @@
         <input type="text" name="search" placeholder="Search by student or course..." required>
         <button type="submit">Search</button>
     </form>
+
+    <H4>{{text}}</H4>
 
     <!-- Enrollment Table -->
     <table class="enrollments-table">
@@ -35,7 +44,7 @@
             {% for enroll in enrollments %}
             <tr>
                 <td>{{ enroll.id }}</td>
-                <td>{{ enroll.student.name }}</td>
+                <td> <a href="/enroll/students/{{ enroll.student.id }}/viwe" class="student_name_a">{{  enroll.student.name }}</a></td>
                 <td>{{ enroll.course.name }}</td>
                 <td>{{ enroll.enroll_date }}</td>
                 <td>{{ enroll.status }}</td>
@@ -48,8 +57,5 @@
         </tbody>
     </table>
 
-    {% if not enrollments %}
-        <p class="no-data">No enrollments found.</p>
-    {% endif %}
 </div>
 {% endblock %}

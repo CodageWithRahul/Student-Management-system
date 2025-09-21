@@ -1,14 +1,15 @@
 from flask import Blueprint,render_template,redirect,url_for,flash,session,request,jsonify
 from app import db
 from app.models.sms_models import Student,Course,Enrollment
+from sqlalchemy import or_,cast,String
 
 enrollment_bp = Blueprint('enrollment',__name__)
 
 @enrollment_bp.route("/enrollments")
 def enroll_home():
     if session.get("user_id"):
-        enrolls = Enrollment.query.all()
-        return render_template("enrollment/enroll_home.html",enrollments = enrolls)
+        enrolls = Enrollment.query.order_by(Enrollment.enroll_date.desc()).limit(5).all()
+        return render_template("enrollment/enroll_home.html",enrollments = enrolls,text = "Last 5 Enrollments!")
     else:
         return redirect(url_for("auth.login"))
 
@@ -61,12 +62,33 @@ def deroll_student(enroll_id):
 
 @enrollment_bp.route("/enrollments/search",methods = ["POST"])
 def search_enroll():
-    search_term= request.form.get("search")
+    search_term= request.form.get("search").strip()
+    if not search_term:
+        flash("Please enter a search term", "error")
+        return render_template("enrollment/enroll_home.html", enrollments=[])
+
     if search_term.isdigit():
         got_enroll = Enrollment.query.filter(Enrollment.id == int(search_term))
+        
     else:
-        got_enroll = Enrollment.query.join(Course).join(Student).filter(Course.name.ilike(f"%{search_term}%") | (Student.name.ilike(f"%{search_term}%")) | (Enrollment.enroll_date.ilike(f"%{search_term}%")))
-    return render_template("enrollment/enroll_home.html",enrollments= got_enroll)
+        got_enroll = (Enrollment.query
+            .join(Course)
+            .join(Student)
+            .filter(
+                or_(
+                    Course.name.ilike(f"%{search_term}%"),
+                    Student.name.ilike(f"%{search_term}%"),
+                    cast(Enrollment.enroll_date, String).ilike(f"%{search_term}%")
+                )
+            )
+        )
+
+        
+        
+    results = got_enroll.all()
+    if not results:
+        flash("No Enrollment Found", "error")
+    return render_template("enrollment/enroll_home.html",enrollments= results)
     
 
 @enrollment_bp.route("/students/search")
@@ -74,3 +96,9 @@ def search_students():
     query = request.args.get("query", "")
     results = Student.query.filter(Student.name.ilike(f"%{query}%")).limit(10).all()
     return jsonify([{"id": s.id, "name": s.name} for s in results])
+
+
+@enrollment_bp.route("/enroll/students/<int:student_id>/viwe")
+def viwe_student(student_id):
+    got_student = Student.query.get_or_404(student_id)
+    return render_template("students/student_viwe.html", student=got_student,back_url = "enrollments",show_edit = False)
