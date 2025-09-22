@@ -101,4 +101,4 @@ def search_students():
 @enrollment_bp.route("/enroll/students/<int:student_id>/viwe")
 def viwe_student(student_id):
     got_student = Student.query.get_or_404(student_id)
-    return render_template("students/student_viwe.html", student=got_student,back_url = "enrollments",show_edit = False)
+    return render_template("students/student_view.html", student=got_student,back_url = "enrollments",show_edit = False)
