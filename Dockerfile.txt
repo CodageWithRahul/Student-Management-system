@@ -13,10 +13,10 @@ RUN curl -O https://downloads.apache.org/tomcat/tomcat-9/v9.0.73/bin/apache-tomc
     rm apache-tomcat-9.0.73.tar.gz
 
 # Copy WAR file into Tomcat
-COPY captcha/yourapp.war /opt/tomcat/webapps/ROOT.war
+COPY captcha/CaptchaService.war /opt/tomcat/webapps/ROOT.war
 
 # Copy Flask app
-COPY flask_app /app
+COPY Student-Management-system /app
 WORKDIR /app
 RUN pip3 install -r requirements.txt
 
