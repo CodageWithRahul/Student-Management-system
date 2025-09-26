@@ -16,7 +16,7 @@ RUN curl -O https://downloads.apache.org/tomcat/tomcat-9/v9.0.73/bin/apache-tomc
 COPY captcha/CaptchaService.war /opt/tomcat/webapps/ROOT.war
 
 # Copy Flask app
-COPY Student-Management-system /app
+COPY SMS /app
 WORKDIR /app
 RUN pip3 install -r requirements.txt
 
