@@ -1,6 +1,6 @@
 generateCapthca();
 function generateCapthca() {
-	fetch('http://localhost:9090/CaptchaService/generate')
+	fetch('http://localhost:8080/CaptchaService/generate')
 		.then(response => {
 			const captchaId = response.headers.get('Captcha-ID');
 			document.getElementById('captcha_id').value = captchaId;
@@ -23,7 +23,7 @@ form.addEventListener('submit', function (e) {
 		plainData[key] = value;
 	});
 
-	fetch('http://localhost:9090/CaptchaService/validate', {
+	fetch('http://localhost:8080/CaptchaService/validate', {
 		method: 'POST',
 		headers: {
 			"Content-Type": "application/json"
