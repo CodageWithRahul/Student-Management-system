@@ -1,6 +1,7 @@
 generateCapthca();
+
 function generateCapthca() {
-	fetch('http://localhost:8080/generate')
+	fetch('/captcha/generate')   // proxy endpoint
 		.then(response => {
 			const captchaId = response.headers.get('Captcha-ID');
 			document.getElementById('captcha_id').value = captchaId;
@@ -11,10 +12,11 @@ function generateCapthca() {
 			document.getElementById('captcha').src = imageUrl;
 		})
 		.catch(error => console.error("Error loading CAPTCHA:", error));
-
 }
+
 const form = document.getElementById('captchaForm');
 const capInputField = document.getElementById('capInput');
+
 form.addEventListener('submit', function (e) {
 	e.preventDefault();
 	const formData = new FormData(form);
@@ -23,7 +25,7 @@ form.addEventListener('submit', function (e) {
 		plainData[key] = value;
 	});
 
-	fetch('http://localhost:8080/validate', {
+	fetch('/captcha/validate', {   // 	proxy endpoint
 		method: 'POST',
 		headers: {
 			"Content-Type": "application/json"
@@ -33,20 +35,19 @@ form.addEventListener('submit', function (e) {
 		.then(res => res.json())
 		.then(data => {
 			if (data.success) {
-			 fetch('/login', {
-                method: 'POST',
-                body: formData   // send original login fields (username, password, etc.)
-            })
-      .then(res => {
-        if(res.redirected){
-          window.location.href =  res.url;
-        }
-        else {
-          return res.text().then(html => {
-            document.body.innerHTML = html;
-          })
-        }
-      });
+				fetch('/login', {
+					method: 'POST',
+					body: formData   // send original login fields (username, password, etc.)
+				})
+					.then(res => {
+						if (res.redirected) {
+							window.location.href = res.url;
+						} else {
+							return res.text().then(html => {
+								document.body.innerHTML = html;
+							});
+						}
+					});
 			} else {
 				const msg = document.getElementById('result');
 				const inputFiled = document.getElementById('capInput');

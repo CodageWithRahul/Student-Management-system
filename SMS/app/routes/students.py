@@ -1,26 +1,28 @@
 from flask import Blueprint,render_template,redirect,url_for,flash,session,request,jsonify
 from app import db
 from app.models.sms_models import Student,Course,Enrollment
+from app.decorator.login_auth import login_required
 
 student_bp = Blueprint('student',__name__)
 
-@student_bp.route("/students")
-def students():
-    if session.get("user_id"):
-        got_course =  Course.query.all()
-        return render_template("students/students.html",courses=got_course)
-    else:
-        return redirect(url_for("auth.login"))
-    
 
+@student_bp.route("/students")
+@login_required
+def students():
+
+    got_course =  Course.query.all()
+    return render_template("students/students.html",courses=got_course)
+
+    
 @student_bp.route("/api/courses/<int:course_id>/semesters")
+@login_required
 def api_get_semesters(course_id):
     course = Course.query.get_or_404(course_id)
     semesters = [{"id": sem.id, "number": sem.number} for sem in course.semesters]
     return jsonify({"semesters": semesters})
 
-    
 @student_bp.route("/students/add",methods= ["POST","GET"])
+@login_required
 def add_student():
     if request.method == "POST":
         name = request.form.get("name")
@@ -42,7 +44,9 @@ def add_student():
     else:
         return render_template("students/add_student.html")
     
+    
 @student_bp.route("/students/filter",methods=["POST"])
+@login_required
 def serachStudent():
     search_term = (request.form.get("search") or "").strip()
     search_course = (request.form.get("course") or "").strip()
@@ -79,8 +83,8 @@ def serachStudent():
     return render_template("students/students.html", courses = got_course,students=got_students)
 
 
-
 @student_bp.route("/students/<int:student_id>/edit", methods=["GET", "POST"])
+@login_required
 def edit_student(student_id):
     got_student = Student.query.get_or_404(student_id)
     
@@ -105,8 +109,8 @@ def edit_student(student_id):
     # GET request → render form with current data
     return render_template("students/edit_student.html", student=got_student)
 
-
 @student_bp.route("/students/<int:student_id>/delete", methods=["POST"])
+@login_required
 def delete_student(student_id):
     student = Student.query.get_or_404(student_id)
 
@@ -126,6 +130,7 @@ def delete_student(student_id):
     return redirect(url_for("student.students"))
 
 @student_bp.route("/students/<int:student_id>/viwe")
+@login_required
 def viwe_student(student_id):
     got_student = Student.query.get_or_404(student_id)
     return render_template("students/student_view.html", student=got_student,back_url = "students",show_edit = True)

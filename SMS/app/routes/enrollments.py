@@ -2,10 +2,12 @@ from flask import Blueprint,render_template,redirect,url_for,flash,session,reque
 from app import db
 from app.models.sms_models import Student,Course,Enrollment
 from sqlalchemy import or_,cast,String
+from app.decorator.login_auth import login_required
 
 enrollment_bp = Blueprint('enrollment',__name__)
 
 @enrollment_bp.route("/enrollments")
+@login_required
 def enroll_home():
     if session.get("user_id"):
         enrolls = Enrollment.query.order_by(Enrollment.enroll_date.desc()).limit(5).all()
@@ -13,7 +15,9 @@ def enroll_home():
     else:
         return redirect(url_for("auth.login"))
 
+
 @enrollment_bp.route("/enrollments/add",methods = ["POST","GET"])
+@login_required
 def add_enroll():
     if request.method == "POST":
         got_student_id =  request.form.get("student_id")
@@ -29,7 +33,10 @@ def add_enroll():
         got_courses = Course.query.all()
         return render_template("enrollment/add_enrollment.html",courses = got_courses)
 
+
+
 @enrollment_bp.route("/enrollments/<int:enroll_id>/edit",methods = ["POST","GET"])
+@login_required
 def edit_enroll(enroll_id):
     got_enroll = Enrollment.query.get_or_404(enroll_id)    
     if request.method == "POST":
@@ -51,7 +58,10 @@ def edit_enroll(enroll_id):
         got_courses = Course.query.all()
         return render_template("enrollment/edit_enroll.html",enroll = got_enroll,courses =got_courses)
     
+    
+    
 @enrollment_bp.route("/enrollments/<int:enroll_id>/delete",methods = ["POST","GET"])
+@login_required
 def deroll_student(enroll_id):
     enrolled_studnet = Enrollment.query.get_or_404(enroll_id)
     
@@ -60,7 +70,9 @@ def deroll_student(enroll_id):
     flash("Student has been de-enrolled successfully.", "success")
     return redirect(url_for("enrollment.enroll_home"))
 
+
 @enrollment_bp.route("/enrollments/search",methods = ["POST"])
+@login_required
 def search_enroll():
     search_term= request.form.get("search").strip()
     if not search_term:
@@ -92,13 +104,14 @@ def search_enroll():
     
 
 @enrollment_bp.route("/students/search")
+@login_required
 def search_students():
     query = request.args.get("query", "")
     results = Student.query.filter(Student.name.ilike(f"%{query}%")).limit(10).all()
     return jsonify([{"id": s.id, "name": s.name} for s in results])
 
-
 @enrollment_bp.route("/enroll/students/<int:student_id>/viwe")
+@login_required
 def viwe_student(student_id):
     got_student = Student.query.get_or_404(student_id)
     return render_template("students/student_view.html", student=got_student,back_url = "enrollments",show_edit = False)

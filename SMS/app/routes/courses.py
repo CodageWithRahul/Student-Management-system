@@ -1,10 +1,12 @@
 from flask import Blueprint,render_template,redirect,url_for,flash,session,request
 from app import db
 from app.models.sms_models import Course ,Subject,SemesterSubject,Semester
+from app.decorator.login_auth import login_required
 
 course_bp = Blueprint("course",__name__)
 
 @course_bp.route("/courses")
+@login_required
 def course_home():
     if session.get("user_id"):
         return render_template("courses/courses.html")
@@ -12,6 +14,7 @@ def course_home():
         return redirect(url_for("auth.login"))
 
 @course_bp.route("/courses/add",methods = ["POST","GET"])
+@login_required
 def add_course():
     if request.method == "POST":
         course_name = request.form.get("name")
@@ -30,6 +33,7 @@ def add_course():
         return render_template("courses/add_course.html")
 
 @course_bp.route("/courses/search",methods = ["POST"])
+@login_required
 def search_course():
     search_term = request.form.get("search")
 
@@ -47,16 +51,19 @@ def search_course():
     return render_template("courses/courses.html",courses = got_course)
 
 @course_bp.route("/courses/subject")
+@login_required
 def subject_manage():
     return render_template("courses/subjects_manage.html")
 
 @course_bp.route("/courses/search/subject",methods = ["POST"])
+@login_required
 def search_subject():
     search_term = request.form.get("search")
     got_subject = Subject.query.filter(Subject.code.ilike(f"%{search_term}%" ) | Subject.name.ilike(f"%{search_term}%")).all()
     return render_template("courses/subjects_manage.html",subjects = got_subject)
 
 @course_bp.route("/subject/edit/<string:subject_code>",methods = ["POST","GET"])
+@login_required
 def edit_subject(subject_code):
     got_sub = Subject.query.get(subject_code)
     if request.method ==  "POST":
@@ -76,6 +83,7 @@ def edit_subject(subject_code):
         
 
 @course_bp.route("/courses/add/subject",methods = ["POST","GET"])
+@login_required
 def add_subject():
     if request.method == ("POST"):
         sub_code = request.form.get("sub_code")
@@ -90,12 +98,14 @@ def add_subject():
     
 
 @course_bp.route("/courses/<int:course_id>/semesters") 
+@login_required
 def semester_manage(course_id):
     got_course = Course.query.get_or_404(course_id)
     return render_template("courses/semester_manage.html",course = got_course)
 
 
 @course_bp.route("/courses/<int:course_id>/semesters/add/form",methods = ["POST","GET"])
+@login_required
 def add_semester(course_id):
     if request.method ==  "POST":
         c_id = request.form.get("course_id")
@@ -117,6 +127,7 @@ def add_semester(course_id):
         return render_template("courses/add_semester.html",course = got_course,subjects = Subject.query.all())
 
 @course_bp.route("/courses/edit/<int:course_id>",methods = ["POST","GET"])
+@login_required
 def edit_course(course_id):
     fetched_course = Course.query.get_or_404(course_id)
     if request.method == "POST":
@@ -133,6 +144,7 @@ def edit_course(course_id):
         return render_template("courses/edit_course.html",course = fetched_course)
     
 @course_bp.route("/subject/delete/<string:subject_code>",methods = ["POST","GET"])
+@login_required
 def delete_sub(subject_code):
     sub_for_delete = Subject.query.get(subject_code)
     try:
@@ -147,6 +159,7 @@ def delete_sub(subject_code):
     
     
 @course_bp.route("/courses/delete/<int:course_id>", methods=["POST","GET"])
+@login_required
 def delete_course(course_id):
     course_delete = Course.query.get_or_404(course_id)
     
@@ -168,6 +181,7 @@ def delete_course(course_id):
 
 
 @course_bp.route("/courses/edit/semester/<int:semester_id>", methods=["POST", "GET"])
+@login_required
 def edit_sem(semester_id):
     got_sem = Semester.query.get_or_404(semester_id)
 
@@ -190,6 +204,7 @@ def edit_sem(semester_id):
         subjects=Subject.query.all()  # send ALL subjects
     )
 @course_bp.route("/courses/delete/semester/<int:semester_id>",methods = {"POST","GET"})
+@login_required
 def delete_sem(semester_id):
     sem_for_delete = Semester.query.get_or_404(semester_id)
     save_course_id = sem_for_delete.course.id
