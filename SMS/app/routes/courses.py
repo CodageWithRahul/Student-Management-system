@@ -9,7 +9,8 @@ course_bp = Blueprint("course",__name__)
 @login_required
 def course_home():
     if session.get("user_id"):
-        return render_template("courses/courses.html")
+        got_course =  Course.query.all()
+        return render_template("courses/courses.html",courses= got_course)
     else:
         return redirect(url_for("auth.login"))
 

@@ -10,8 +10,8 @@ student_bp = Blueprint('student',__name__)
 @login_required
 def students():
 
-    got_course =  Course.query.all()
-    return render_template("students/students.html",courses=got_course)
+    got_students =  Student.query.all()
+    return render_template("students/students.html",students=got_students)
 
     
 @student_bp.route("/api/courses/<int:course_id>/semesters")

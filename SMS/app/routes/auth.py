@@ -1,6 +1,7 @@
-from flask import Blueprint,render_template,request,redirect,url_for,flash,session
+from flask import Blueprint,render_template,request,redirect,url_for,flash,session,jsonify
 from app import db
 from app.models.sms_models import User
+
 
 
 auth_bp = Blueprint('auth',__name__)
@@ -42,3 +43,7 @@ def logout():
     session.clear()
     flash("You have been logged out", "info")
     return redirect(url_for("auth.login"))
+
+@auth_bp.route("/devMode")
+def DevMode():
+    return jsonify({"devMode": False})
